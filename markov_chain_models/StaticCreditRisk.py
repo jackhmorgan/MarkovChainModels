@@ -2,24 +2,12 @@
 from .MarkovChain import MarkovChain
 from .NormalDistribution import NormalDistribution
 
-from qiskit import QuantumCircuit, transpile
-from qiskit_aer import AerSimulator
-
-# qiskit-ibmq-provider has been deprecated.
-# Please see the Migration Guides in https://ibm.biz/provider_migration_guide for more detail.
-from qiskit_ibm_runtime import QiskitRuntimeService, Sampler, Estimator, Session, Options
-
-# Loading your IBM Quantum account(s)
-service = QiskitRuntimeService(channel="ibm_quantum")
+from qiskit import QuantumCircuit
 
 import numpy as np
 from qiskit import QuantumCircuit
 from qiskit.circuit.library.arithmetic import PolynomialPauliRotations, WeightedAdder, IntegerComparator
-from scipy.stats import norm
 from qiskit.circuit.library import IntegerComparator
-from scipy.stats import linregress as lin
-from typing import Optional
-from scipy.stats import norminvgauss
 from typing import Optional
 from scipy.stats import norm, linregress
 
@@ -95,10 +83,10 @@ class StaticCreditRisk(QuantumCircuit):
         U = self._MCUncertainty()
         S = WeightedAdder(self.groups, weights) #manually adjust weights here
         C = IntegerComparator(S.num_sum_qubits, loss+1, geq=False)
-        
-        self.objective = -C.num_ancillas-1 #qubit to measure and/or objective in QAE
           
         circ = QuantumCircuit(1+time_steps+z_qubits+self.groups+S.num_ancillas+C.num_qubits)
+
+        self.objective = circ.num_qubits-C.num_ancillas-1 #qubit to measure and/or objective in QAE
         
         circ.append(N.to_gate(), qargs=range(1+time_steps,1+time_steps+z_qubits)) #prepare our random variable in a gaussian probability distribution
         circ.append(M, qargs=range(time_steps+1)) #prepare Markov Chain Qubits

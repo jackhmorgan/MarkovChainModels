@@ -10,10 +10,11 @@
 # copyright notice, and modified files need to carry a notice indicating
 # that they have been altered from the originals.
 
-"""A circuit that encodes a discretized normal probability distribution in qubit amplitudes."""
+"""A circuit that encodes a discretized normal probability distribution in qubit amplitudes. This code is cloned from 
+an outdated version of qiskit available at https://github.com/Qiskit/qiskit/blob/stable/0.18/qiskit/circuit/library/probability_distributions/normal.py
+A few modificaitons have been made to the original code to make the class compatible with qiskit>=1.0"""
 
 from typing import Tuple, Union, List, Optional
-import warnings
 import numpy as np
 from qiskit.circuit import QuantumCircuit
 from qiskit.exceptions import QiskitError
@@ -150,13 +151,6 @@ class NormalDistribution(QuantumCircuit):
                 If ``None``, the bounds are set to ``(-1, 1)`` for each dimension.
             name: The name of the circuit.
         """
-        warnings.warn(
-            "`NormalDistribution` is deprecated as of version 0.17.0 and will be "
-            "removed no earlier than 3 months after the release date. "
-            "It moved to qiskit_finance.circuit.library.NormalDistribution.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
 
         _check_dimensions_match(num_qubits, mu, sigma, bounds)
         _check_bounds_valid(bounds)
